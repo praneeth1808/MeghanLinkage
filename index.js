@@ -2,7 +2,7 @@ const dialogflow = require("@google-cloud/dialogflow");
 require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
-
+const { getMainIntents } = require("./getIntents");
 const { WebhookClient } = require("dialogflow-fulfillment");
 
 // Your credentials
@@ -37,7 +37,6 @@ const CREDENTIALS_002Seaborn = {
   client_x509_cert_url:
     "https://www.googleapis.com/robot/v1/metadata/x509/pythonlocalbot%40q002meghan-01seaborn-htey.iam.gserviceaccount.com",
 };
-
 // Detect intent method
 const detectIntent_001Pandas = async (languageCode, queryText, sessionId) => {
   // Your google dialogflow project-id
@@ -113,7 +112,7 @@ const detectIntent_002Seaborn = async (languageCode, queryText, sessionId) => {
   const responses = await sessionClient.detectIntent(request);
   //   console.log(responses);
   const result = responses[0].queryResult;
-  //   console.log(result);
+  console.log(result);
 
   return {
     response: result.fulfillmentText,
@@ -144,25 +143,26 @@ webApp.post("/dialogflow", async (req, res) => {
   let agent = new WebhookClient({ request: req, response: res });
   // create intentMap for handle intent
   let intentMap = new Map();
+  const intents = await getMainIntents();
+  intents.map((intent) => intentMap.set(intent, handleWebHookIntent));
   // add intent map 2nd parameter pass function
-  intentMap.set("001Pandas", handleWebHookIntent);
-  // add intent map 2nd parameter pass function
-  intentMap.set("002Seaborn", handleWebHookIntent);
+  // intentMap.set("001Pandas", handleWebHookIntent);
+  // // add intent map 2nd parameter pass function
+  // intentMap.set("002Seaborn", handleWebHookIntent);
   // now agent is handle request and pass intent map
   agent.handleRequest(intentMap);
   //   res.send(responseData.response);
 });
 async function handleWebHookIntent(agent) {
-  console.log(agent["query"]);
-  console.log(agent["intent"]);
-  console.log(agent["session"]);
   //   console.log(responseData.response);
-  if (agent["intent"] == "001Pandas") {
+  if (agent["intent"].includes("001Pandas")) {
     let responseData = await detectIntent_001Pandas("en", agent["query"], 0);
     agent.add(responseData.response);
-  } else {
+  } else if (agent["intent"].includes("002Seaborn")) {
     let responseData = await detectIntent_002Seaborn("en", agent["query"], 0);
     agent.add(responseData.response);
+  } else {
+    agent.add("My idiot develoepr didnt train me");
   }
 }
 
