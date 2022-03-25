@@ -37,6 +37,23 @@ const CREDENTIALS_002Seaborn = {
   client_x509_cert_url:
     "https://www.googleapis.com/robot/v1/metadata/x509/pythonlocalbot%40q002meghan-01seaborn-htey.iam.gserviceaccount.com",
 };
+
+const CREDENTIALS_004PandasUG = {
+  type: "service_account",
+  project_id: "t004meghan-01pandasusergu-kgli",
+  private_key_id: "c30dd3126a35100ab446ef21120e6d1203f6f0f4",
+  private_key:
+    "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC08qGR6pD1H5F7\nK+xQMelccNm8up17dlyeOq2oyd2wGVOeaNIag0b+Ok1nTMfr3nz87t3HMI/E3b8t\n8v0NMkXh0Q7CO7eXkY0a7PKlGN85Fl5fYhMpDi94WbkBpfOa9L8rnz9rOxDP/3Rs\nslp9l/KIF5oYBoSLDqGdMQR42y/5VrB20UAPDSfHHmv8rcjoWtW++eYt7/U5lwJE\nBVjqk1Bpy38FosdZtyKpb1MicWdbQBaEY55VEwJ8JYpW2w6mtmp6zpG8vPUbnYpf\nrOaV6iOQSwrnINkl+KEr7gycrOS3rQKrAd7Y8s18lIXiyPBi2j2nmpiF2rQd35MB\nznnnBLRHAgMBAAECggEAGYRl2If1rTuobnBBQQXo3MplSkIe1zxXz1CDENx20NCh\nhCNQDcEZj9x08e5X+yFDCwA8ckyc2axTu40atnOyeyfaJvX46/zwoy1rAnFBeXF4\nGYdhIFcJxrUQa/UVJ3MASoyIivynYE2sA3AbZr64ywxZBK5Wnq2PiPVSpiBy4Xxl\nIiayAfcu5nZ9QAc9XHewtFkK6BrPqB7g8tXVR+u8+HCSoYx+8U7T+9kWJY9mnJHj\nIiut+KsZRtVBI0QK5efxy77Pb/01o3WiVUEKYlnzxY7pP6zcwdd86FUdw7SzUKdS\nWSWKgbCFn6tOyPmyjE8yDslsLaso7OawFyAT2pEvUQKBgQDtmICPkAnvrVmGeYny\nCZdE2f0u5+eA67ZXE3Z/1NeNA+DzxUS5ovjVQbsREyBkY5UQjlsvITaLEMy/L2ed\nbBsR1ed3dYEel7zoBmYL/V1ApxzyXqP8X9nM2rlF3GRv1uRfl22NQHp6UXtTIU5h\n09ghrqTZ7A+t2lIWyM0NU8ehFQKBgQDC9s5w/YLyJCVMmJDhyrxU5WHI6gXNP+b0\nYUmmrapX3PtbDPsm+zkkZBLTIfFxbzSy3E4fawJccRf6LHWnWv33GDorNVJlUN/5\noiTndyKgjlyb3lqAvHli634RISnZDs2KMHIJQ/Uoj59Oq05AKyFmUZz32nZboeiI\nv4Kku23+6wKBgG5bLxt/Y54XfkWfnhr1qXUpaxemTzjqQr8fIyMs0RGGg622Kr2u\nnLUw2pqLr7fxKQOPm3rAinz9SJxkgFP2KnyWRfSOd3KmN+/tSOi4vd+Rvzg0DSbj\nvl4QGY4BWAU6YsijpRa+pCS8Q/PQvH9jzjeWzqsJoh62EPrUOam/CDIhAoGBAL+L\nASlrN7Izpt2I6paausrhjV954/dRt9MSnex+pGOsPNqodztGCE7jbsc1iuM6MVkk\nLjCZznkJt1fXREQGloqjp8p5mZjmixXTolQx7Lg3BW8xVlMyWEPCP1oO7fFNpMwG\napMFzB9sc0Qz8y4B8c93kTLE1BGUkUOAe5bied+/AoGBAN1oRsROzGNR8ybk+vH0\n0IYac7VZ5bOBlPlvctmvBDW8kLk772GuHqHt13h83G5/JB6zJHNIyPM5zhvBDVUA\nbeBg6W6DJdvvG9SgTSpeDrovwgL5f96acYnKtTz075+eJVm8Ph2pXTX1Cz+GuQm+\n+/dxG74TsiC6IYO5vbqHhVAa\n-----END PRIVATE KEY-----\n",
+  client_email:
+    "createintent-test@t004meghan-01pandasusergu-kgli.iam.gserviceaccount.com",
+  client_id: "104225467750312446551",
+  auth_uri: "https://accounts.google.com/o/oauth2/auth",
+  token_uri: "https://oauth2.googleapis.com/token",
+  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+  client_x509_cert_url:
+    "https://www.googleapis.com/robot/v1/metadata/x509/createintent-test%40t004meghan-01pandasusergu-kgli.iam.gserviceaccount.com",
+};
+
 // Detect intent method
 const detectIntent_001Pandas = async (languageCode, queryText, sessionId) => {
   // Your google dialogflow project-id
@@ -118,6 +135,47 @@ const detectIntent_002Seaborn = async (languageCode, queryText, sessionId) => {
     response: result.fulfillmentText,
   };
 };
+
+const detectIntent_004PandasUG = async (languageCode, queryText, sessionId) => {
+  // Your google dialogflow project-id
+  const PROJECID = CREDENTIALS_004PandasUG.project_id;
+
+  // Configuration for the client
+  const CONFIGURATION = {
+    credentials: {
+      private_key: CREDENTIALS_004PandasUG["private_key"],
+      client_email: CREDENTIALS_004PandasUG["client_email"],
+    },
+  };
+
+  // Create a new session
+  const sessionClient = new dialogflow.SessionsClient(CONFIGURATION);
+
+  let sessionPath = sessionClient.projectAgentSessionPath(PROJECID, sessionId);
+
+  // The text query request.
+  let request = {
+    session: sessionPath,
+    queryInput: {
+      text: {
+        // The query to send to the dialogflow agent
+        text: queryText,
+        // The language used by the client (en-US)
+        languageCode: languageCode,
+      },
+    },
+  };
+
+  // Send request and log result
+  const responses = await sessionClient.detectIntent(request);
+  //   console.log(responses);
+  const result = responses[0].queryResult;
+  //   console.log(result);
+
+  return {
+    response: result.fulfillmentText,
+  };
+};
 // Start the webapp
 const webApp = express();
 
@@ -161,8 +219,11 @@ async function handleWebHookIntent(agent) {
   } else if (agent["intent"].includes("002Seaborn")) {
     let responseData = await detectIntent_002Seaborn("en", agent["query"], 0);
     agent.add(responseData.response);
+  } else if (agent["intent"].includes("004PandasUG")) {
+    let responseData = await detectIntent_004PandasUG("en", agent["query"], 0);
+    agent.add(responseData.response);
   } else {
-    agent.add("My idiot develoepr didnt train me");
+    agent.add("My idiot developer didn't train me.");
   }
 }
 
