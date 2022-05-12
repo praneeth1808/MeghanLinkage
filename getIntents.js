@@ -36,7 +36,6 @@ const getMainIntents = async () => {
     parent: projectAgentPath,
   };
   const [response] = await intentsClient.listIntents(request);
-  console.log(response[0]);
   return await response.map((intent) => intent.displayName);
 };
 

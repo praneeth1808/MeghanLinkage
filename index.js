@@ -4,7 +4,7 @@ const express = require("express");
 const fs = require("fs");
 const { getMainIntents } = require("./getIntents");
 const { WebhookClient } = require("dialogflow-fulfillment");
-
+const getKey = require("./getMongoKey");
 // Your credentials
 const CREDENTIALS_001Pandas = {
   type: "service_account",
@@ -87,9 +87,7 @@ const detectIntent_001Pandas = async (languageCode, queryText, sessionId) => {
 
   // Send request and log result
   const responses = await sessionClient.detectIntent(request);
-  //   console.log(responses);
   const result = responses[0].queryResult;
-  //   console.log(result);
 
   return {
     response: result.fulfillmentText,
@@ -127,9 +125,7 @@ const detectIntent_002Seaborn = async (languageCode, queryText, sessionId) => {
 
   // Send request and log result
   const responses = await sessionClient.detectIntent(request);
-  //   console.log(responses);
   const result = responses[0].queryResult;
-  console.log(result);
 
   return {
     response: result.fulfillmentText,
@@ -168,9 +164,50 @@ const detectIntent_004PandasUG = async (languageCode, queryText, sessionId) => {
 
   // Send request and log result
   const responses = await sessionClient.detectIntent(request);
-  //   console.log(responses);
   const result = responses[0].queryResult;
-  //   console.log(result);
+
+  return {
+    response: result.fulfillmentText,
+  };
+};
+const detectIntent_StackoverFlowGroup = async (
+  key,
+  languageCode,
+  queryText,
+  sessionId
+) => {
+  // Your google dialogflow project-id
+  const PROJECID = key.project_id;
+
+  // Configuration for the client
+  const CONFIGURATION = {
+    credentials: {
+      private_key: key["private_key"],
+      client_email: key["client_email"],
+    },
+  };
+
+  // Create a new session
+  const sessionClient = new dialogflow.SessionsClient(CONFIGURATION);
+
+  let sessionPath = sessionClient.projectAgentSessionPath(PROJECID, sessionId);
+
+  // The text query request.
+  let request = {
+    session: sessionPath,
+    queryInput: {
+      text: {
+        // The query to send to the dialogflow agent
+        text: queryText,
+        // The language used by the client (en-US)
+        languageCode: languageCode,
+      },
+    },
+  };
+
+  // Send request and log result
+  const responses = await sessionClient.detectIntent(request);
+  const result = responses[0].queryResult;
 
   return {
     response: result.fulfillmentText,
@@ -212,7 +249,6 @@ webApp.post("/dialogflow", async (req, res) => {
   //   res.send(responseData.response);
 });
 async function handleWebHookIntent(agent) {
-  //   console.log(responseData.response);
   if (agent["intent"].includes("001Pandas")) {
     let responseData = await detectIntent_001Pandas("en", agent["query"], 0);
     agent.add(responseData.response);
@@ -222,8 +258,24 @@ async function handleWebHookIntent(agent) {
   } else if (agent["intent"].includes("004PandasUG")) {
     let responseData = await detectIntent_004PandasUG("en", agent["query"], 0);
     agent.add(responseData.response);
+  } else if (agent["intent"] == "Default Fallback Intent") {
+    agent.add("I'm sorry, i don't have enough infomrmation on this");
   } else {
-    agent.add("My idiot developer didn't train me.");
+    console.log(agent["consoleMessages"][0]["text"]);
+    await getKey(parseInt(agent["consoleMessages"][0]["text"])).then(
+      async (key_res) => {
+        console.log(key_res);
+        let responseData = await detectIntent_StackoverFlowGroup(
+          key_res[0].key,
+          "en",
+          agent["query"],
+          0
+        );
+        console.log(responseData.response);
+        agent.add(responseData.response);
+      }
+    );
+    // agent.add("I'm sorry, i don't have enough infomrmation on this");
   }
 }
 
